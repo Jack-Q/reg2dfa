@@ -1,10 +1,14 @@
-const obj2dot = o => `
+import { EPS } from './state';
+
+const e = '&epsilon;';
+
+const obj2dot = ({ edges, terminals }) => `
 digraph G {
     rankdir="LR";
     node [shape="circle"];
-    ${o.edges.map(e => `
-    ${e[0]} -> ${e[1]} [ label="${e[2] == -1 ? '&epsilon;' : e[2]}" ];`).join('')}
-    ${o.terminals.map(t => `
+    ${edges.map(({src, dest, label}) => `
+    ${src} -> ${dest} [ label="${label == EPS ? e : label}" ];`).join('')}
+    ${terminals.map(t => `
     ${t} [shape="doublecircle"];`)}
 }
 `;

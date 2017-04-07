@@ -1,10 +1,13 @@
-const createTerm = head => ({h: head, t: head, p: []});
+import { trans, EPS } from './state';
+
+const createTerm = head => ({ h: head, t: head, p: [] });
 
 const mergeSub = (subterms, h, t, store) => subterms.map(subterm => {
-  store.push([h, subterm.h, -1]);
+  store.push(trans(h, subterm.h, EPS));
   store.push.apply(store, subterm.p);
-  store.push([subterm.t, t, -1]);
+  store.push(trans(subterm.t, t, EPS));
 });
+
 
 const constNfa = (state) => {
   let terms = [];
@@ -28,7 +31,7 @@ const constNfa = (state) => {
         mergeSub(subterms, term.t, i, term.p);
         if (state.exp[state.pos] == '*') {
           state.pos++;
-          term.p.push([i, term.t, -1]);
+          term.p.push(trans(i, term.t, EPS));
         }
         term.t = i;
         break;
@@ -39,10 +42,10 @@ const constNfa = (state) => {
       default: // character
         state.dict[c] = true;
         i = state.stateCount++;
-        term.p.push([term.t, i, c]);
+        term.p.push(trans(term.t, i, c));
         if (state.exp[state.pos] == '*') {
           state.pos++;
-          term.p.push([i, i, c]);
+          term.p.push(trans(i, i, c));
         }
         term.t = i;
     }
