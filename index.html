@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>DFA &amp; NFA</title>
+  <link href="https://fonts.googleapis.com/css?family=Cinzel|Raleway:200,400" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      cursor: default;
+    }
+
+    body,
+    html {
+      font-size: 18px;
+      text-align: center;
+      padding: 0;
+      font-family: 'Raleway', Arial, Helvetica, sans-serif;
+      margin: 0;
+      background: #eef;
+      min-height: 100vh;
+    }
+
+    .fix {
+      position: fixed;
+      width: 100%;
+      z-index: 150;
+      box-shadow: 0 0 20px 3px rgba(120,120,120,0.4);
+      background: rgba(80, 160, 250, 0.6);
+    }
+
+    .header {
+      height: 120px;
+      width: 100%;
+      top: 0;
+    }
+    .header span {
+      height: 70px;
+      display: block;
+      line-height: 70px;
+      font-size: 40px;
+      font-family: Cinzel, sans-serif;
+    }
+    .header input {
+      display: block;
+      background: rgba(180,180,180,0.8);
+      opacity: 0.4;
+      font-size: 22px;
+      font-weight: 200;
+      line-height: 50px;
+      font-family: inherit;
+      height: 50px;
+      width: 100%;
+      text-align: center;
+      outline: none;
+      border: none;
+      border-bottom: solid 3px #09c;
+      transition: all ease 400ms;
+    }
+
+    input:active, input:focus, input:hover {
+      opacity: 1;
+    }
+
+    .footer {
+      bottom: 0;
+      color: #555;
+      height: 30px;
+      font-size: 16px;
+      line-height: 30px;
+      text-shadow:0 0 2px rgba(220,220,220,0.2);
+      opacity: 0.7;
+    }
+
+    .result {
+      padding-top: 125px;
+      position: relative;
+      padding-bottom: 50px;
+    }
+
+    .about {
+      opacity: 1;
+      pointer-events: all;
+      position: absolute;
+      z-index: 30;
+      width: 100%;
+      min-height: 100%;
+      background: #eef;
+      font-size: 20px;
+      line-height: 30px;
+      font-weight: 200;
+    }
+    .about p{
+      margin: 20px auto;
+      max-width: 800px;
+    }
+    .about.off {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .result .item{
+      background: #fff;
+      margin: 15px 0;
+      box-shadow: 0 0 10px 1px rgba(10,10,10,0.1);
+    }
+
+    .result .title {
+      font-family: 'Cinzel', sans-serif;
+      font-size: 20px;
+      letter-spacing: -2.5px;
+      line-height: 35px;
+      border-bottom: dotted 1px #ccc;
+      text-shadow: 0 0 2px rgba(10,10,10,0.4);
+    }
+
+    .result .picture {
+      padding: 25px 20px;
+      
+      max-height: 80vh;
+      overflow-x: auto;
+      width: 100%;
+    }
+
+    .result.rendering {
+      opacity: 0.5;
+    }
+
+    .result .loader {
+      top: 0;
+      position: fixed;
+      z-index: 100;
+      pointer-events: none;
+      opacity: 0;
+      transition: all ease 400ms;
+      background: rgba(220, 180, 160, 0.5);
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-content: stretch;
+      flex-direction: column;
+      font-size: 55px;
+      font-weight: 100;
+    }
+
+    .result.rendering .loader {
+      opacity: 1;
+    }
+
+    svg {
+      display: inline-block;
+    }
+
+    @media only screen and (min-width: 768px){
+      .about {
+        font-size: 30px;
+        line-height: 60px;
+      }
+      .result .title{
+        font-size: 25px;
+        line-height: 45px;
+      }
+      .result .picture {
+        padding: 40px 40px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="fix header">
+    <span>RegExp 2 DFA</span>
+    <input type="text" id="expression" placeholder="type regular expression here" />
+  </div>
+  <div id="result" class="result">
+    <div class="loader">
+      <span>Rendering ...</span>
+    </div>
+    <div class="about">
+      <p>
+        first, enter a regular expression (RegExp)
+        <br>
+        like "01*|00(10)*|01", "abc*|ac*b"
+      </p>
+      <p>
+        then, convert the RegExp to nondeterministic finite automata (NFA)
+      </p>
+      <p>
+        then, convert the NFA to deterministic automata (DFA)
+      </p>
+      <p>finally, minimize the DFA</p> 
+    </div>
+    <div class="item">
+      <div class="title">Nondeterministic Finite Automata</div>
+      <div class="picture"  id="result-nfa"></div>
+    </div>
+    <div class="item">
+      <div class="title">Deterministic Finite Automata</div>
+      <div class="picture"  id="result-dfa"></div>
+    </div>
+    <div class="item">
+      <div class="title">Minimal Deterministic Finite Automata</div>
+      <div class="picture" id="result-min"></div>
+    </div>
+  </div>
+  <div class="fix footer">Jack Q</div>
+  <script>
+    + function () {
+      function createWorker() {
+        var worker = new Worker('./worker.js');
+        worker.onerror = function (e) {
+          console.log(e);
+        }
+        worker.onmessage = function (e) {
+          workerBusy = false;
+          document.getElementById('result').className = 'result';
+          if (e.data.status) {
+            document.getElementById('result-nfa').innerHTML = e.data.dot[0];
+            document.getElementById('result-dfa').innerHTML = e.data.dot[1];
+            document.getElementById('result-min').innerHTML = e.data.dot[2];
+
+            document.querySelector('.about').className = 'about off';
+            setTimeout(function(){document.querySelector('.about').style.display = 'none';}, 500);
+          } else {
+            alert("failed to render diagram");
+          }
+        }
+        return worker;
+      }
+
+      var workerBusy = true;
+      var currentWorker = undefined;
+
+      document.getElementById('expression').oninput = function (e) {
+        var str = e.target.value.replace(/\s/g,'');
+        if (str) {
+          if (workerBusy) {
+            currentWorker && currentWorker.terminate();
+            currentWorker = createWorker();
+          }
+          currentWorker.postMessage(str);
+          document.getElementById('result').className = 'result rendering';
+        }
+      }
+    }();
+  </script>
+</body>
+
+</html>
