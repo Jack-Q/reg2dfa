@@ -70,23 +70,26 @@ const dfa2min = (dfa, detail = false) => {
 
   const newStates = stateSets.map(s => Array.from(s)).sort((a, b) =>
     a.reduce((s, i) => s + i, 0) / a.length - b.reduce((s, i) => s + i, 0) / b.length);
-
-  console.log(newStates);
   
   const stateMap = newStates.reduce((map, newState, i) => { 
     newState.map(p => map[p] = i);
     return map;
   }, {})
   
-  const edgeComp = (a, b) => a.src - b.src || a.dest - b.dest || a.label - b.label;
+  const edgeComp = (a, b) => a.src - b.src || a.dest - b.dest || (a.label < b.label ? -1 : a.label > b.label ? 1 : 0);
 
   const edges = dfa.edges.map(e => trans(stateMap[e.src], stateMap[e.dest], e.label))
-    .sort(edgeComp).reduce((a, e, i, arr) => {
+    .sort(edgeComp)
+    .reduce((a, e, i, arr) => {
       if(!i || edgeComp(e, arr[i -1])) a.push(e);
       return a;
     },[]);
 
-  console.log(edges);
+  const nodeFmt = (s, i) => ({
+    id: i,
+    label: `${i}\n(${s.join()})`,
+    terminal: terminals.some(t => s.indexOf(t) >= 0)
+  });
 
   return {
     edges,
