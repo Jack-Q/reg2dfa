@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>DFA &amp; NFA</title>
+</head>
+
+<body>
+  <input type="text" id="expression" />
+  <div id="result-nfa"></div>
+  <div id="result-dfa"></div>
+  <div id="result-min"></div>
+  <script>
+    + function () {
+      var worker = new Worker('./worker.js');
+      worker.onerror = function (e) {
+        console.log(e);
+      }
+      worker.onmessage = function (e) {
+        console.log("Message received from worker");
+        if (e.data.status) {
+          document.getElementById('result-nfa').innerHTML = e.data.dot[0];
+          document.getElementById('result-dfa').innerHTML = e.data.dot[1];
+          document.getElementById('result-min').innerHTML = e.data.dot[2];
+        } else {
+          alert("failed to render diagram");
+        }
+      }
+      document.getElementById('expression').oninput = function(e){
+        if(e.target.value.trim()){
+          worker.postMessage(e.target.value.trim());
+        }
+      }
+    }();
+  </script>
+</body>
+
+</html>

@@ -21,7 +21,9 @@
     "jest": "^19.0.2",
     "regenerator-runtime": "^0.10.3",
     "rollup": "^0.37.0",
-    "rollup-plugin-babel": "^2.7.1"
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "viz.js": "^1.7.1"
   },
   "jest": {
     "transform": {

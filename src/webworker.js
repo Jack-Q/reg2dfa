@@ -1,4 +1,5 @@
 import { dfa2min, exp2nfa, nfa2dfa, obj2dot } from './main';
+importScripts('./viz.js');
 
 const workerProcess = (exp) => {
   const nfa = exp2nfa(exp);
@@ -13,12 +14,15 @@ const onmessage = function(e) {
   try {
     postMessage({
       status: true,
-      dot: workerProcess(e.exp)
+      dot: workerProcess(e.data).map(dot => Viz(dot))
     }); 
   } catch (e) {
     postMessage({
       status: false,
       message: e.message
     })
+    console.error(e);
   }
 }
+
+self.addEventListener('message', onmessage)
