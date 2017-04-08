@@ -27,13 +27,16 @@ const constNfa = (state) => {
         break;
       case '(':
         subterms = constNfa(state);
-        i = state.stateCount++;
-        mergeSub(subterms, term.t, i, term.p);
         if (state.exp[state.pos] == '*') {
           state.pos++;
-          term.p.push(trans(i, term.t, EPS));
+          mergeSub(subterms, term.t, i, term.p);
+          // term.p.push(trans(i, term.t, EPS));
+          // term.p.push(trans(term.t, i, EPS));
+        } else {
+          i = state.stateCount++;
+          mergeSub(subterms, term.t, i, term.p);
+          term.t = i;
         }
-        term.t = i;
         break;
       case ')':
       case undefined:
@@ -42,12 +45,15 @@ const constNfa = (state) => {
       default: // character
         state.dict[c] = true;
         i = state.stateCount++;
-        term.p.push(trans(term.t, i, c));
         if (state.exp[state.pos] == '*') {
           state.pos++;
+          term.p.push(trans(term.t, i, EPS));
           term.p.push(trans(i, i, c));
+          term.p.push(trans(i, term.t, EPS));
+        } else {
+          term.p.push(trans(term.t, i, c));
+          term.t = i;
         }
-        term.t = i;
     }
   }
 }
@@ -70,7 +76,7 @@ const exp2nfa = (exp) => {
   if (state.pos - exp.length != 1) 
     console.warn("# unmatched langth, may caused by one unclosed left parenthesis or extra right parenthesis");
   
-  return { edges, terminals: [state.stateCount], dict: state.dict };
+  return { states: new Array(state.stateCount + 1).fill(0).map((_,i)=>i), edges, terminals: [state.stateCount], dict: Object.keys(state.dict) };
 }
 
 export {exp2nfa};
