@@ -9,7 +9,7 @@ digraph G {
     ${edges.map(({src, dest, label}) => `
     ${src} -> ${dest} [ label="${label == EPS ? e : label}" ];`).join('')}
     ${terminals.map(t => `
-    ${t} [shape="doublecircle"];`)}
+    ${t} [shape="doublecircle"];`).join('')}
 }
 `;
 
