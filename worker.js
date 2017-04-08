@@ -369,8 +369,6 @@ var dfa2min = function dfa2min(dfa) {
 
   var stateSet = new Set(states);
 
-  console.log(closure);
-
   // Init state sets and split to two sets
   var stateSets = [stateSet.subset(function (s) {
     return terminals.indexOf(s) >= 0;
@@ -399,8 +397,7 @@ var dfa2min = function dfa2min(dfa) {
           var ele = _ref7;
 
           closure[ele][ch].size == 0 ? hasEmpty = true : s.addSet(closure[ele][ch]);
-        }console.log("Clo:", stateSet, s);
-        if (!s.size) return;else if (!hasEmpty) {
+        }if (!s.size) return;else if (!hasEmpty) {
           for (var _iterator2 = stateSets, _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator]();;) {
             var _ref8;
 
@@ -441,7 +438,6 @@ var dfa2min = function dfa2min(dfa) {
             if (!clo.size) continue;
 
             var _ele = Array.from(clo)[0];
-            // if (stateSet.has(ele)) continue;
 
             for (var _iterator4 = stateSets, _isArray4 = Array.isArray(_iterator4), _i4 = 0, _iterator4 = _isArray4 ? _iterator4 : _iterator4[Symbol.iterator]();;) {
               var _ref10;
@@ -473,7 +469,6 @@ var dfa2min = function dfa2min(dfa) {
         stateSet.diff(newSubset);
         stateSets.push(newSubset);
         _change = true;
-        console.log(stateSets);
       });
     });
     change = _change;
@@ -539,7 +534,7 @@ var dfa2min = function dfa2min(dfa) {
   };
 };
 
-importScripts('./viz.js');
+importScripts('./viz-lite.js');
 
 var workerProcess = function workerProcess(exp) {
   var nfa = exp2nfa(exp);

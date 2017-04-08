@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>DFA &amp; NFA</title>
+  <title>RegExp 2 DFA -- Convert RegExp to DFA</title>
+
   <link href="https://fonts.googleapis.com/css?family=Cinzel|Raleway:200,400" rel="stylesheet">
 
   <style>
@@ -30,7 +31,7 @@
       position: fixed;
       width: 100%;
       z-index: 150;
-      box-shadow: 0 0 20px 3px rgba(120,120,120,0.4);
+      box-shadow: 0 0 20px 3px rgba(120, 120, 120, 0.4);
       background: rgba(80, 160, 250, 0.6);
     }
 
@@ -39,6 +40,7 @@
       width: 100%;
       top: 0;
     }
+
     .header span {
       height: 70px;
       display: block;
@@ -46,9 +48,10 @@
       font-size: 40px;
       font-family: Cinzel, sans-serif;
     }
+
     .header input {
       display: block;
-      background: rgba(180,180,180,0.8);
+      background: rgba(180, 180, 180, 0.8);
       opacity: 0.4;
       font-size: 22px;
       font-weight: 200;
@@ -63,7 +66,9 @@
       transition: all ease 400ms;
     }
 
-    input:active, input:focus, input:hover {
+    input:active,
+    input:focus,
+    input:hover {
       opacity: 1;
     }
 
@@ -73,7 +78,7 @@
       height: 30px;
       font-size: 16px;
       line-height: 30px;
-      text-shadow:0 0 2px rgba(220,220,220,0.2);
+      text-shadow: 0 0 2px rgba(220, 220, 220, 0.2);
       opacity: 0.7;
     }
 
@@ -95,19 +100,32 @@
       line-height: 30px;
       font-weight: 200;
     }
-    .about p{
+
+    .about p {
       margin: 20px auto;
       max-width: 800px;
     }
+
     .about.off {
       opacity: 0;
       pointer-events: none;
     }
 
-    .result .item{
+    a {
+      color: inherit;
+      text-shadow: 0 0 2px rgba(80, 80, 80, 0.3);
+      display: inline-block;
+      border-bottom: dotted 1px #555;
+      text-decoration: none;
+      cursor: pointer;
+      line-height: 25px;
+      font-size: 16px;
+    }
+
+    .result .item {
       background: #fff;
       margin: 15px 0;
-      box-shadow: 0 0 10px 1px rgba(10,10,10,0.1);
+      box-shadow: 0 0 10px 1px rgba(10, 10, 10, 0.1);
     }
 
     .result .title {
@@ -116,12 +134,12 @@
       letter-spacing: -2.5px;
       line-height: 35px;
       border-bottom: dotted 1px #ccc;
-      text-shadow: 0 0 2px rgba(10,10,10,0.4);
+      text-shadow: 0 0 2px rgba(10, 10, 10, 0.4);
     }
 
     .result .picture {
       padding: 25px 20px;
-      
+
       max-height: 80vh;
       overflow-x: auto;
       width: 100%;
@@ -157,12 +175,17 @@
       display: inline-block;
     }
 
-    @media only screen and (min-width: 768px){
+    @media only screen and (min-width: 768px) {
       .about {
         font-size: 30px;
         line-height: 60px;
       }
-      .result .title{
+      .about a {
+
+        line-height: 20px;
+        font-size: 35px;
+      }
+      .result .title {
         font-size: 25px;
         line-height: 45px;
       }
@@ -185,8 +208,7 @@
     <div class="about">
       <p>
         first, enter a regular expression (RegExp)
-        <br>
-        like "01*|00(10)*|01", "abc*|ac*b"
+        <br> like "01*|00(10)*|01", "abc*|ac*b"
       </p>
       <p>
         then, convert the RegExp to nondeterministic finite automata (NFA)
@@ -194,15 +216,18 @@
       <p>
         then, convert the NFA to deterministic automata (DFA)
       </p>
-      <p>finally, minimize the DFA</p> 
+      <p>finally, minimize the DFA</p>
+      <p>
+        <a href="https://github.com/Jack-Q/reg2dfa" title="check out source" target="_blank">@GitHub</a>
+      </p>
     </div>
     <div class="item">
       <div class="title">Nondeterministic Finite Automata</div>
-      <div class="picture"  id="result-nfa"></div>
+      <div class="picture" id="result-nfa"></div>
     </div>
     <div class="item">
       <div class="title">Deterministic Finite Automata</div>
-      <div class="picture"  id="result-dfa"></div>
+      <div class="picture" id="result-dfa"></div>
     </div>
     <div class="item">
       <div class="title">Minimal Deterministic Finite Automata</div>
@@ -226,7 +251,9 @@
             document.getElementById('result-min').innerHTML = e.data.dot[2];
 
             document.querySelector('.about').className = 'about off';
-            setTimeout(function(){document.querySelector('.about').style.display = 'none';}, 500);
+            setTimeout(function () {
+              document.querySelector('.about').style.display = 'none';
+            }, 500);
           } else {
             alert("failed to render diagram");
           }
@@ -238,7 +265,7 @@
       var currentWorker = undefined;
 
       document.getElementById('expression').oninput = function (e) {
-        var str = e.target.value.replace(/\s/g,'');
+        var str = e.target.value.replace(/\s/g, '');
         if (str) {
           if (workerBusy) {
             currentWorker && currentWorker.terminate();
@@ -250,6 +277,23 @@
       }
     }();
   </script>
+  <script>
+    (function (i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-63336636-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  <script src="./viz-lite.js" defer></script>
 </body>
 
 </html>
