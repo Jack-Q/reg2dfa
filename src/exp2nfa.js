@@ -29,9 +29,7 @@ const constNfa = (state) => {
         subterms = constNfa(state);
         if (state.exp[state.pos] == '*') {
           state.pos++;
-          mergeSub(subterms, term.t, i, term.p);
-          // term.p.push(trans(i, term.t, EPS));
-          // term.p.push(trans(term.t, i, EPS));
+          mergeSub(subterms, term.t, term.t, term.p);
         } else {
           i = state.stateCount++;
           mergeSub(subterms, term.t, i, term.p);
@@ -44,13 +42,11 @@ const constNfa = (state) => {
         return terms;
       default: // character
         state.dict[c] = true;
-        i = state.stateCount++;
         if (state.exp[state.pos] == '*') {
           state.pos++;
-          term.p.push(trans(term.t, i, EPS));
-          term.p.push(trans(i, i, c));
-          term.p.push(trans(i, term.t, EPS));
+          term.p.push(trans(term.t, term.t, c));
         } else {
+          i = state.stateCount++;
           term.p.push(trans(term.t, i, c));
           term.t = i;
         }
