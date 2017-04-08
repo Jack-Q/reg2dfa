@@ -6,8 +6,8 @@
   "scripts": {
     "test": "jest",
     "start": "babel-node src/cli.js",
-    "convert": "babel src -d build",
-    "watch": "babel src -d build -watch",
+    "convert": "babel src -d build --presets=env,es2017",
+    "watch": "babel src -d build -watch --presets=env,es2017",
     "build-web": "rollup -c"
   },
   "author": "Jack Q",
