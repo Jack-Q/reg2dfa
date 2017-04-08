@@ -25,19 +25,23 @@ const dfa2min = (dfa, detail = false) => {
   const stateSets = [stateSet.subset(s => terminals.indexOf(s) >= 0)];
   stateSets.unshift(stateSet.diff(stateSets[0]));
 
-  for (let i = 0, change = true; i < states.length && change; i++){
+  for (let i = 0, change = true; i <= states.length && change; i++){
     change = false;
     dict.map(ch => change || stateSets.map(stateSet => {
       if (change) return;
       const s = new Set();
-      for (let ele of stateSet) s.addSet(closure[ele][ch]);
+      let hasEmpty = false;
+      for (let ele of stateSet)
+        closure[ele][ch].size == 0 ? hasEmpty = true : s.addSet(closure[ele][ch]);
 
-      if (!s.size) return;
-      
-      for (let curSet of stateSets) {
-        // no need to split
-        if (s.subsetOf(curSet)) {
-          return;
+      if (!s.size)
+        return;
+      else if (!hasEmpty) {
+        for (let curSet of stateSets) {
+          // no need to split
+          if (s.subsetOf(curSet)) {
+            return;
+          }
         }
       }
 
@@ -47,7 +51,6 @@ const dfa2min = (dfa, detail = false) => {
           if (!clo.size) continue;
 
           let ele = Array.from(clo)[0];
-          if (stateSet.has(ele)) continue;
 
           for (let splitStateSet of stateSets)
             if (splitStateSet.has(ele))
@@ -60,11 +63,10 @@ const dfa2min = (dfa, detail = false) => {
         return;  
       }
         
-      const newSubset = stateSet.subset(state => closure[state][ch].subsetOf(splitSet));
+      const newSubset = stateSet.subset(state => closure[state][ch].size &&closure[state][ch].subsetOf(splitSet));
       stateSet.diff(newSubset);
       stateSets.push(newSubset);
       change = true;
-
     }));
   }
 
