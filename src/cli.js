@@ -1,4 +1,5 @@
 import {dfa2min,exp2nfa,nfa2dfa,obj2dot} from './main';
+import fs from 'fs';
 
 const main = expr => {
   try {

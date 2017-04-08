@@ -1,3 +1,10 @@
 {
-  "presets": ["env", "es2017"]
+  "presets": [
+    [
+      "env", {
+        "modules": false,
+        "loose": true
+      }
+    ], "es2017"
+  ]
 }
