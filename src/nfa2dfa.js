@@ -1,19 +1,5 @@
 import {trans, EPS} from './state';
 
-Set.prototype.addSet = function (s) {
-  for (let ele of s) this.add(ele);
-  return this;
-}
-
-Set.prototype.eq = function (s) {
-  if (!s || this.size !== s.size) 
-    return false;
-  for (let ele of this) 
-    if (!s.has(ele)) 
-      return false;
-  return true;
-}
-
 const newState = (index, nfaStates, isTerminal) => ({index, nfaStates, isTerminal});
 
 const procNfa = ({states, edges, terminals, dict}) => {
