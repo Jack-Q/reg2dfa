@@ -1,8 +1,9 @@
 {
-  "name": "nfa-dfa",
+  "name": "reg2dfa",
   "version": "1.0.0",
-  "description": "",
+  "description": "Convert regular expression to NFA, DFA and minimal DFA, and check the result visually",
   "main": "index.js",
+  "repository": "https://github.com/Jack-Q/reg2dfa",
   "scripts": {
     "test": "jest",
     "start": "babel-node src/cli.js",
@@ -23,7 +24,6 @@
     "rollup": "^0.37.0",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "viz.js": "^1.7.1"
   },
   "jest": {
     "transform": {
