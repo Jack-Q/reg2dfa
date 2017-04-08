@@ -10,7 +10,7 @@ export default (expr) => {
 
     console.log(nfa.dict);
 
-    const dfa = nfa2dfa(nfa);
+    const dfa = nfa2dfa(nfa, true);
     fs.writeFileSync('dfa.dot', obj2dot(dfa));
   } catch (e) {
     console.error(e.message);
