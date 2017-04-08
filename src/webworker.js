@@ -1,5 +1,5 @@
 import { dfa2min, exp2nfa, nfa2dfa, obj2dot } from './main';
-importScripts('./viz.js');
+importScripts('./viz-lite.js');
 
 const workerProcess = (exp) => {
   const nfa = exp2nfa(exp);
