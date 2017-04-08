@@ -16,13 +16,6 @@ Set.prototype.eq = function (s) {
 
 const newState = (index, nfaStates, isTerminal) => ({index, nfaStates, isTerminal});
 
-// DOT label for node
-const nodeFmt = (s, i) => ({
-  id: i,
-  label: `${i}\n(${Array.from(s).join()})`,
-  terminal: terminals.some(t => s.has(t))
-});
-
 const procNfa = ({states, edges, terminals, dict}) => {
   const adjecent = ch => edges.filter(e => e.label === ch)
     .reduce((p, c) => (p[c.src].add(c.dest), p), states.reduce((p, i) => ((p[i] = new Set()), p), {}));
@@ -63,7 +56,6 @@ const nfa2dfa = (nfa, detail = false) => {
 
   while (newState.length) {
     const curState = newState.shift();
-    // if (states.some(s => s.eq(curState))) continue;
     const src = states.indexOf(curState);
     dict.map(ch => {
       let nxtState = new Set();
@@ -77,6 +69,13 @@ const nfa2dfa = (nfa, detail = false) => {
       edges.push(trans(src, dest, ch));
     });
   }
+
+  // DOT label for node
+  const nodeFmt = (s, i) => ({
+    id: i,
+    label: `${i}\n(${Array.from(s).join()})`,
+    terminal: terminals.some(t => s.has(t))
+  });
 
   return {
     edges,
