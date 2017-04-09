@@ -23,7 +23,7 @@
     "regenerator-runtime": "^0.10.3",
     "rollup": "^0.37.0",
     "rollup-plugin-babel": "^2.7.1",
-    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-node-resolve": "^3.0.0"
   },
   "jest": {
     "transform": {
