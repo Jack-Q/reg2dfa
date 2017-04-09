@@ -10,7 +10,7 @@ Web Page
 The in-browser version is accessible at GitHub Pages, which can 
 render the DOT result to SVG.
 
-Check it out at [https://github.com/Jack-Q/reg2dfa/]().
+Check it out at [https://jack-q.github.io/reg2dfa/](https://jack-q.github.io/reg2dfa/).
 
 CLI
 ---
