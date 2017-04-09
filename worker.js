@@ -134,14 +134,15 @@ var constNfa = function constNfa(state) {
         break;
       case '(':
         subterms = constNfa(state);
+        i = state.stateCount++;
         if (state.exp[state.pos] == '*') {
           state.pos++;
+          term.p.push(trans(term.t, i, EPS));
           mergeSub(subterms, term.t, term.t, term.p);
         } else {
-          i = state.stateCount++;
           mergeSub(subterms, term.t, i, term.p);
-          term.t = i;
         }
+        term.t = i;
         break;
       case ')':
       case undefined:
@@ -150,14 +151,15 @@ var constNfa = function constNfa(state) {
       default:
         // character
         state.dict[c] = true;
+        i = state.stateCount++;
         if (state.exp[state.pos] == '*') {
           state.pos++;
+          term.p.push(trans(term.t, i, EPS));
           term.p.push(trans(term.t, term.t, c));
         } else {
-          i = state.stateCount++;
           term.p.push(trans(term.t, i, c));
-          term.t = i;
         }
+        term.t = i;
     }
   }
 };
@@ -373,7 +375,9 @@ var dfa2min = function dfa2min(dfa) {
   var stateSets = [stateSet.subset(function (s) {
     return terminals.indexOf(s) >= 0;
   })];
-  stateSets.unshift(stateSet.diff(stateSets[0]));
+
+  // if all nodes are terminal, ignore the other set
+  stateSets[0].size < stateSet.size && stateSets.unshift(stateSet.diff(stateSets[0]));
 
   var _loop = function _loop(i, _change) {
     _change = false;
@@ -478,9 +482,17 @@ var dfa2min = function dfa2min(dfa) {
     _loop(i, change);
   }
 
-  var newStates = stateSets.map(function (s) {
+  var newStates = stateSets.filter(function (s) {
+    return s.size;
+  }).map(function (s) {
     return Array.from(s);
   }).sort(function (a, b) {
+    if (a.indexOf(0) >= 0) {
+      return b.indexOf(0) >= 0 ? a.length - b.length : -1;
+    }
+    if (b.indexOf(0) >= 0) {
+      return 1;
+    }
     return a.reduce(function (s, i) {
       return s + i;
     }, 0) / a.length - b.reduce(function (s, i) {
