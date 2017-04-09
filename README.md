@@ -12,7 +12,7 @@ Example
 
 * NFA (Nondeterministic Finite Automata):
 
-  ![nfa](https://cdn.rawgit.com/Jack-Q/reg2dfa/master/doc/dfa.svg)
+  ![nfa](https://cdn.rawgit.com/Jack-Q/reg2dfa/master/doc/nfa.svg)
 
 * DFA (Deterministic Finite Automata):
 
@@ -20,7 +20,7 @@ Example
 
 * MIN (Minimal Deterministic Finite Automata):
 
-  ![min](https://cdn.rawgit.com/Jack-Q/reg2dfa/master/doc/dfa.svg)
+  ![min](https://cdn.rawgit.com/Jack-Q/reg2dfa/master/doc/min.svg)
 
 
 Web Page
