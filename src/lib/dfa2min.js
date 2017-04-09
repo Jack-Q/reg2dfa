@@ -70,8 +70,15 @@ const dfa2min = (dfa, detail = false) => {
     }));
   }
 
-  const newStates = stateSets.map(s => Array.from(s)).sort((a, b) =>
-    a.reduce((s, i) => s + i, 0) / a.length - b.reduce((s, i) => s + i, 0) / b.length);
+  const newStates = stateSets.map(s => Array.from(s)).sort((a, b) => {
+    if (a.indexOf(0) >= 0) {
+      return b.indexOf(0) >= 0 ? a.length - b.length : -1;
+    }
+    if (b.indexOf(0) >= 0) {
+      return 1;
+    }
+    return a.reduce((s, i) => s + i, 0) / a.length - b.reduce((s, i) => s + i, 0) / b.length;
+  });
   
   const stateMap = newStates.reduce((map, newState, i) => { 
     newState.map(p => map[p] = i);
