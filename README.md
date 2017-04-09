@@ -4,6 +4,25 @@ REG 2 DFA
 Convert regular expression to NFA, DFA and minimal DFA,
 and check the result visually. 
 
+Example
+-------
+* regular expression:
+  
+  `(1|0*11)*0*1*`
+
+* NFA (Nondeterministic Finite Automata):
+
+  ![nfa](doc/nfa.svg)
+
+* DFA (Deterministic Finite Automata):
+
+  ![dfa](doc/dfa.svg)
+
+* MIN (Minimal Deterministic Finite Automata):
+
+  ![min](doc/min.svg)
+
+
 Web Page
 --------
 
