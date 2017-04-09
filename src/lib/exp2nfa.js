@@ -42,14 +42,15 @@ const constNfa = (state) => {
         return terms;
       default: // character
         state.dict[c] = true;
+        i = state.stateCount++;
         if (state.exp[state.pos] == '*') {
           state.pos++;
+          term.p.push(trans(term.t, i, EPS));
           term.p.push(trans(term.t, term.t, c));
         } else {
-          i = state.stateCount++;
           term.p.push(trans(term.t, i, c));
-          term.t = i;
         }
+        term.t = i;
     }
   }
 }
