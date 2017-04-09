@@ -27,14 +27,15 @@ const constNfa = (state) => {
         break;
       case '(':
         subterms = constNfa(state);
+        i = state.stateCount++;
         if (state.exp[state.pos] == '*') {
           state.pos++;
+          term.p.push(trans(term.t, i, EPS));
           mergeSub(subterms, term.t, term.t, term.p);
         } else {
-          i = state.stateCount++;
           mergeSub(subterms, term.t, i, term.p);
-          term.t = i;
         }
+        term.t = i;
         break;
       case ')':
       case undefined:
