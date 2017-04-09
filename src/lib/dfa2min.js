@@ -23,7 +23,9 @@ const dfa2min = (dfa, detail = false) => {
   
   // Init state sets and split to two sets
   const stateSets = [stateSet.subset(s => terminals.indexOf(s) >= 0)];
-  stateSets.unshift(stateSet.diff(stateSets[0]));
+
+  // if all nodes are terminal, ignore the other set
+  stateSets[0].size < stateSet.size && stateSets.unshift(stateSet.diff(stateSets[0]));
 
   for (let i = 0, change = true; i <= states.length && change; i++){
     change = false;
@@ -70,7 +72,7 @@ const dfa2min = (dfa, detail = false) => {
     }));
   }
 
-  const newStates = stateSets.map(s => Array.from(s)).sort((a, b) => {
+  const newStates = stateSets.filter(s => s.size).map(s => Array.from(s)).sort((a, b) => {
     if (a.indexOf(0) >= 0) {
       return b.indexOf(0) >= 0 ? a.length - b.length : -1;
     }
