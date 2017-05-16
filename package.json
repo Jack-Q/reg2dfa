@@ -6,7 +6,7 @@
   "repository": "https://github.com/Jack-Q/reg2dfa",
   "scripts": {
     "test": "jest",
-    "start": "babel-node src/cli.js",
+    "start": "babel-node --presets=env,es2017 src/cli.js",
     "convert": "babel src -d build --presets=env,es2017",
     "watch": "babel src -d build -watch --presets=env,es2017",
     "build-web": "rollup -c"

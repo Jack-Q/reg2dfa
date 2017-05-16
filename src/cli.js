@@ -1,4 +1,4 @@
-import {dfa2min,exp2nfa,nfa2dfa,obj2dot} from './main';
+import {dfa2min, exp2nfa, nfa2dfa, obj2dot} from './main';
 import fs from 'fs';
 
 const main = expr => {
@@ -7,7 +7,7 @@ const main = expr => {
     const nfa = exp2nfa(expr)
     fs.writeFileSync('nfa.dot', obj2dot(nfa));
 
-    // DFA 
+    // DFA
     const dfa = nfa2dfa(nfa);
     fs.writeFileSync('dfa.dot', obj2dot(dfa));
 
@@ -20,5 +20,6 @@ const main = expr => {
   }
 };
 
-
+// Expecting one command line parameter that feeds the 
+// regular expression into the main procedure
 main(...process.argv.slice(2));
